@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "CarDad",
+  "name": "The place to go when your Dad cant help",
   "icons": [
     {
       "src": "favicon.ico",
