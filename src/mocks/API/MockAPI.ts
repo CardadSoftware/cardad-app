@@ -15,11 +15,11 @@ const testUser: UserModel = {
 };
 
 const testJob: JobModel = {
-    jobName: "test1", customer: testUser, invoices: undefined
+    jobName: "test1", customer: testUser, invoices: [{pay: 200, invoiceId: 123}]
 };
 
 class MockCardadAPI{
-    getJobs(filter: string, page: number, pageSize: number): Observable<ApiResponse<Array<JobModel>>>{
+    getJobs(page: number, pageSize: number,filter?: string): Observable<ApiResponse<Array<JobModel>>>{
         const response = new ApiResponse<Array<JobModel>>;
         response.data = [testJob];
         // wait 750 mill then emit
