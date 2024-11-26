@@ -10,5 +10,15 @@
 			"path": "../cardad-db"
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"launch": {
+		"configurations": [
+			{
+				"type": "chrome",
+				"name": "https://localhost:4200",
+				"request": "launch",
+				"url": "https://localhost:4200"
+			}
+		]
+	}
 }

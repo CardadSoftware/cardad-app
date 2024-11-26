@@ -1,40 +1,63 @@
-<div class="nav">{{currentUser?.firstName}}</div>
-<div class="job-grid-container">
-    <table mat-table [dataSource]="jobDataSource.data$" class="mat-elevation-z8">
+<div class="nav">{{ currentUser?.firstName }}</div>
 
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-      
-        <!-- Position Column -->
-        <ng-container matColumnDef="jobName">
-          <th mat-header-cell *matHeaderCellDef> Job Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.jobName}} </td>
-        </ng-container>
-      
-        <!-- Name Column -->
-        <ng-container matColumnDef="customerName">
-          <th mat-header-cell *matHeaderCellDef>Customer Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.Customer?.customerName}} </td>
-        </ng-container>
-      
-        <!-- Expandable Row -->
-  <ng-container *ngIf="false" matColumnDef="invoices">
-    <td mat-cell *matCellDef="let element">
-      <tr *ngIf="expandedElement === element">
-        <td [attr.colspan]="displayedJobColumns.length">
-          <mat-card>
-            <!-- Content for expanded row -->
-            <p>Invoices: {{element.invoices.length}}</p>
-            <!-- Add more details here -->
-          </mat-card>
-        </td>
-      </tr>
-    </td>
-  </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedJobColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedJobColumns;"></tr>
-      </table>
-      
-      
+<div class="job-grid-container">
+  <table
+    mat-table
+    [dataSource]="jobDataSource"
+    matSort
+    class="mat-elevation-z8">
+    <!-- Job Name Column -->
+    <ng-container matColumnDef="jobName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Job Name </th>
+      <td mat-cell *matCellDef="let element"> {{ element.jobName }} </td>
+    </ng-container>
+
+    <!-- Customer Name Column -->
+    <ng-container matColumnDef="customerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.customer?.firstName || 'N/A' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="invoices">
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="toggleRow(element)">
+          {{ expandedElement === element ? 'Collapse' : 'Expand' }}
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedJobColumns"></tr>
+    <tr mat-row
+      *matRowDef="let row; columns: displayedJobColumns"
+      [class.expanded]="expandedElement === row"
+      (click)="toggleRow(row)"></tr>
+
+    <tr
+      class="expanded-row"
+      *ngIf="expandedElement"
+      [attr.data-element-id]="expandedElement._id">
+      <td [attr.colspan]="displayedJobColumns.length">
+        <mat-card>
+          <h3>Invoices</h3>
+          <p>Total Invoices: {{ expandedElement.invoices?.length || 0 }}</p>
+          <ul>
+            <li *ngFor="let invoice of expandedElement.invoices">
+              Invoice #: {{ invoice._id }} - Amount: {{ invoice.amount }}
+            </li>
+          </ul>
+        </mat-card>
+      </td>
+    </tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 25]"
+    showFirstLastButtons
+  ></mat-paginator>
+
+  <ng-template #noData>
+    <p>No data available. Please try again later.</p>
+  </ng-template>
 </div>

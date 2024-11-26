@@ -1,7 +1,9 @@
 import { JobModel, UserModel } from 'cardad-db';
+import {v4 as guidv4} from 'uuid'
 import { Observable, of, switchMap, timer } from 'rxjs';
 
 const testUser: UserModel = {
+    _id: guidv4(),
     username: "anthony.stoute",
     firstName: "Anthony",
     lastName: "Stoute",
@@ -14,14 +16,16 @@ const testUser: UserModel = {
 
 };
 
-const testJob: JobModel = {
-    jobName: "test1", customer: testUser, invoices: [{pay: 200, invoiceId: 123}]
-};
+const testJobs: JobModel[] = [
+    { _id: guidv4(), jobName: "test1", customer: testUser, invoices: [{ pay: 200, _id: guidv4() }] },
+    { _id: guidv4(), jobName: "test2", customer: testUser, invoices: [{ pay: 200, _id: guidv4() }] },
+    { _id: guidv4(), jobName: "test3", customer: testUser, invoices: [{ pay: 200, _id: guidv4() }] },
+    { _id: guidv4(), jobName: "test4", customer: testUser, invoices: [{ pay: 200, _id: guidv4() }] }];
 
 class MockCardadAPI{
     getJobs(page: number, pageSize: number,filter?: string): Observable<ApiResponse<Array<JobModel>>>{
         const response = new ApiResponse<Array<JobModel>>;
-        response.data = [testJob];
+        response.data = testJobs;
         // wait 750 mill then emit
         return timer(750).pipe(switchMap(() => of(response) ));
     }
