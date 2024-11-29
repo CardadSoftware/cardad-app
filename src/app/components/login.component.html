@@ -1,0 +1,33 @@
+<mat-card class="auth-card">
+    <mat-card-title>Login</mat-card-title>
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" required />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" required />
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+        Login
+      </button>
+    </form>
+  
+    <mat-divider></mat-divider>
+  
+    <mat-card-title>Register</mat-card-title>
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" required />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" required />
+      </mat-form-field>
+      <button mat-raised-button color="accent" type="submit" [disabled]="registerForm.invalid">
+        Register
+      </button>
+    </form>
+  </mat-card>  
