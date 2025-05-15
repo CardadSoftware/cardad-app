@@ -1,23 +1,19 @@
 import { 
-    JobModel, 
-    UserModel, 
-    VehicleModel, 
-    InvoiceModel, 
-    ChargeModel, 
-    ShopModel, 
-    TechnicianModel, 
     IJob, 
     IUser, 
     IVehicle, 
     IShop, 
     IInvoice,
-    ITechnician 
+    ITechnician, 
+    ICharge
 } from 'cardad-db';
+
 import { v4 as guidv4 } from 'uuid';
 import { Observable, of, switchMap, timer } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 // Create test data using Mongoose models
-const testUser: IUser = new UserModel({
+const testUser: IUser = {
     _id: guidv4(),
     username: "anthony.stoute",
     firstName: "Anthony",
@@ -26,9 +22,9 @@ const testUser: IUser = new UserModel({
     createDate: new Date(),
     active: true,
     online: true
-});
+} as IUser;
 
-const testVehicle: IVehicle = new VehicleModel({
+const testVehicle: IVehicle = {
     _id: guidv4(),
     name: "Toyota Corolla",
     model: "Corolla",
@@ -37,35 +33,34 @@ const testVehicle: IVehicle = new VehicleModel({
     vin: "1HGCM82633A123456",
     licNumber: "ABC123",
     mileage: 50000
-});
+} as IVehicle;
 
-const testInvoice: IInvoice = new InvoiceModel({
-    _id: guidv4(),
-    pay: 100,
-    job: guidv4(),
-    charge: guidv4(),
-    payTo: guidv4(),
-    date: new Date(),
-    status: "Paid"
-});
+const testInvoice: IInvoice = {
+    invoiceName: "Anthonys Invoice",
+    description: "Fix Transfer Case Motor",
+    referenceNumber: "RA-66772",
+    totalCharge: 1600,
+    shop: [] as IShop[],
+    charges: [] as ICharge[],
+} as IInvoice;
 
 const testJobs: IJob[] = [
-    new JobModel({
+    {
         _id: guidv4(),
         jobName: "Engine Repair",
         customer: testUser._id,
-        invoices: []
-    }),
-    new JobModel({
+        invoices: [] as IInvoice[]
+    } as IJob,
+    {
         _id: guidv4(),
         jobName: "Oil Change",
-        customer: testUser._id,
-        invoices: [{ pay: 50, _id: guidv4() }]
-    })
+        customer: testUser,
+        invoices: [testInvoice] as IInvoice[]
+    } as IJob
 ];
 
 const testShops: IShop[] = [
-    new ShopModel({
+    {
         _id: guidv4(),
         name: "AutoFix",
         address: {
@@ -75,11 +70,11 @@ const testShops: IShop[] = [
             state: "IL"
         },
         owner: "John Doe"
-    })
+    } as IShop
 ];
 
 const testTechnicians: ITechnician[] = [
-    new TechnicianModel({
+    {
         _id: guidv4(),
         username: "tech1",
         firstName: "Jane",
@@ -89,9 +84,11 @@ const testTechnicians: ITechnician[] = [
         rating: 5,
         certifications: ["ASE"],
         company: "AutoFix"
-    })
+    } as ITechnician
 ];
-
+@Injectable({
+    providedIn: 'root' // Makes this service a singleton throughout the app
+  })
 class MockCardadAPI {
     // Generic delay for mock responses
     private delay<T>(data: T): Observable<T> {
@@ -151,7 +148,7 @@ class MockCardadAPI {
 
     createVehicle(vehicle: IVehicle): Observable<ApiResponse<IVehicle>> {
         vehicle._id = guidv4();
-        const newVehicle = new VehicleModel(vehicle);
+        const newVehicle = vehicle;
         const response = new ApiResponse<IVehicle>();
         response.data = newVehicle || undefined;
         return this.delay(response);

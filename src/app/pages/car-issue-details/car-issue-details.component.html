@@ -1,89 +1,83 @@
 <div class="car-issue-details">
   <ng-container *ngIf="vehicleModel && userModel">
     <h1>Car Issue Details</h1>
-    <div class="car-details">
-      <h2>{{ vehicleModel.name }}</h2>
-      <p><strong>Year:</strong> {{ vehicleModel.year }}</p>
-      <p><strong>Price:</strong> {{ vehicleModel.price | currency }}</p>
-      <p><strong>User:</strong> {{ userModel.firstName + ',' + userModel.lastName}}</p>
-    </div>
-
-    <div class="issue-form">
-      <form [formGroup]="issueForm" (ngSubmit)="submitIssue()">
-        <div>
-          <label for="issueDescription">Issue Description</label>
-          <textarea id="issueDescription" formControlName="issueDescription" rows="4"></textarea>
-          <div *ngIf="issueForm.get('issueDescription')?.invalid && issueForm.get('issueDescription')?.touched">
-            <small>Description is required and must be at least 10 characters.</small>
+    <mat-horizontal-stepper [linear]="true" [selectedIndex]="stepIndex">
+      <!-- Step 1: Confirm Car -->
+      <mat-step [stepControl]="getControl('isCorrectCar')">
+        <form [formGroup]="issueForm">
+          <p>Is this the correct car on your account?</p>
+          <p><strong>{{ vehicleModel.name }} ({{ vehicleModel.year }})</strong></p>
+          <mat-radio-group formControlName="isCorrectCar">
+            <mat-radio-button value="yes">Yes</mat-radio-button>
+            <mat-radio-button value="no">No</mat-radio-button>
+          </mat-radio-group>
+          <mat-error *ngIf="issueForm.get('isCorrectCar')?.invalid && issueForm.get('isCorrectCar')?.touched">
+            Please confirm if this is the correct car.
+          </mat-error>
+          <div>
+            <button mat-button matStepperNext [disabled]="issueForm.get('isCorrectCar')?.invalid">Next</button>
           </div>
-        </div>
+        </form>
+      </mat-step>
 
-        <div>
-          <label for="urgency">Urgency</label>
-          <select id="urgency" formControlName="urgency">
-            <option value="" disabled>Select urgency</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-          <div *ngIf="issueForm.get('urgency')?.invalid && issueForm.get('urgency')?.touched">
-            <small>Urgency is required.</small>
+      <!-- Step 2: Concern Type -->
+      <mat-step [stepControl]="getControl('concernType')">
+        <form [formGroup]="issueForm">
+          <p>What is causing your concern?</p>
+          <mat-form-field appearance="fill">
+            <mat-label>Concern Type</mat-label>
+            <mat-select formControlName="concernType">
+              <mat-option *ngFor="let option of concernOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-error *ngIf="issueForm.get('concernType')?.invalid && issueForm.get('concernType')?.touched">
+            Please select a concern type.
+          </mat-error>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext [disabled]="issueForm.get('concernType')?.invalid">Next</button>
           </div>
-        </div>
+        </form>
+      </mat-step>
 
-        <div>
-          <label for="preferredDate">Preferred Date</label>
-          <input type="date" id="preferredDate" formControlName="preferredDate" />
-          <div *ngIf="issueForm.get('preferredDate')?.invalid && issueForm.get('preferredDate')?.touched">
-            <small>Preferred date is required.</small>
+      <!-- Step 3: Issue Details -->
+      <mat-step [stepControl]="getControl('issueDescription')">
+        <form [formGroup]="issueForm">
+          <p>Please provide more details about the issue.</p>
+          <mat-form-field appearance="fill">
+            <mat-label>Issue Description</mat-label>
+            <textarea matInput formControlName="issueDescription" rows="4"></textarea>
+          </mat-form-field>
+          <mat-error *ngIf="issueForm.get('issueDescription')?.invalid && issueForm.get('issueDescription')?.touched">
+            Description is required and must be at least 10 characters.
+          </mat-error>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext [disabled]="issueForm.get('issueDescription')?.invalid">Next</button>
           </div>
-        </div>
+        </form>
+      </mat-step>
 
-        <div>
-          <label for="additionalNotes">Additional Notes</label>
-          <textarea id="additionalNotes" formControlName="additionalNotes" rows="3"></textarea>
-        </div>
-
-        <button type="submit" [disabled]="issueForm.invalid">Submit</button>
-      </form>
-    </div>
-  <h2>Report an Issue for {{ vehicleModel.name }}</h2>
-  <form [formGroup]="issueForm" (ngSubmit)="submitIssue()">
-    <div>
-      <label for="issueDescription">Issue Description</label>
-      <textarea id="issueDescription" formControlName="issueDescription" rows="4"></textarea>
-      <div *ngIf="issueForm.get('issueDescription')?.invalid && issueForm.get('issueDescription')?.touched">
-        <small>Description is required and must be at least 10 characters.</small>
-      </div>
-    </div>
-
-    <div>
-      <label for="urgency">Urgency</label>
-      <select id="urgency" formControlName="urgency">
-        <option value="" disabled>Select urgency</option>
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
-      <div *ngIf="issueForm.get('urgency')?.invalid && issueForm.get('urgency')?.touched">
-        <small>Urgency is required.</small>
-      </div>
-    </div>
-
-    <div>
-      <label for="preferredDate">Preferred Date</label>
-      <input type="date" id="preferredDate" formControlName="preferredDate" />
-      <div *ngIf="issueForm.get('preferredDate')?.invalid && issueForm.get('preferredDate')?.touched">
-        <small>Preferred date is required.</small>
-      </div>
-    </div>
-
-    <div>
-      <label for="additionalNotes">Additional Notes</label>
-      <textarea id="additionalNotes" formControlName="additionalNotes" rows="3"></textarea>
-    </div>
-
-    <button type="submit" [disabled]="issueForm.invalid">Submit</button>
-  </form>
-</ng-container>
+      <!-- Step 4: Problem Start Date -->
+      <mat-step [stepControl]="getControl('problemStartDate')">
+        <form [formGroup]="issueForm">
+          <p>When did the problem start?</p>
+          <mat-form-field appearance="fill">
+            <mat-label>Problem Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="problemStartDate" />
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          </mat-form-field>
+          <mat-error *ngIf="issueForm.get('problemStartDate')?.invalid && issueForm.get('problemStartDate')?.touched">
+            Please select a start date.
+          </mat-error>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" (click)="submitIssue()" [disabled]="issueForm.invalid">Submit</button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-horizontal-stepper>
+    <button mat-button (click)="closeComponent()">Close</button>
+  </ng-container>
 </div>

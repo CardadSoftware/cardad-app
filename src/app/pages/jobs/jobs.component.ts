@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import MockCardadAPI from '../../../mocks/API/MockAPI';
-import { JobModel, UserModel } from 'cardad-db';
+import { IJob, IUser } from 'cardad-db';
 import {
   BehaviorSubject,
   catchError,
@@ -30,8 +30,8 @@ export class JobsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  currentUser?: UserModel;
-  expandedElement: JobModel | null = null;
+  currentUser?: IUser;
+  expandedElement: IJob | null = null;
   jobDataSource!: JobDataSource;
   loading: boolean = false;
   displayedJobColumns: string[] = ['jobName', 'customerName'
@@ -63,14 +63,14 @@ export class JobsComponent implements OnInit {
     });
   }
 
-  toggleRow(element: JobModel, event?: MouseEvent): void {
+  toggleRow(element: IJob, event?: MouseEvent): void {
     event?.stopPropagation();
     this.expandedElement = this.expandedElement === element ? null : element;
   }
 }
 
-export class JobDataSource extends DataSource<JobModel> {
-  private dataSubject = new BehaviorSubject<JobModel[]>([]);
+export class JobDataSource extends DataSource<IJob> {
+  private dataSubject = new BehaviorSubject<IJob[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private errorSubject = new BehaviorSubject<string | null>(null);
 
@@ -95,7 +95,7 @@ export class JobDataSource extends DataSource<JobModel> {
     this.updateData();
   }
 
-  connect(): Observable<JobModel[]> {
+  connect(): Observable<IJob[]> {
     this.loadingSubject.next(true);
 
     return this.cardadApi.getJobs(1, 100).pipe(
@@ -133,7 +133,7 @@ export class JobDataSource extends DataSource<JobModel> {
     this.dataSubject.next(paginatedData);
   }
 
-  private sortData(data: JobModel[]): JobModel[] {
+  private sortData(data: IJob[]): IJob[] {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return data;
     }
