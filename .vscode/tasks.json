@@ -1,0 +1,52 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "npm: start",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "start"],
+            
+            "problemMatcher": [
+                {
+                    "base": "$tsc-watch",
+                    "severity": "error",
+                    "pattern": {
+                        "regexp": "(\\[ERROR\\]|Error)((\\s.*)(?=:))?((?::)(.*))?((?:[\\s]*)(.*))?((?:[\\s]*)([A-z/\\-\\.]*))?(((?::)(\\d*))((?::)(\\d*)))",
+                        "message": 6,
+                        "file": 9,
+                        "line": 12,
+                        "column": 14,
+                        "code": 10
+                    },
+                    "background": {
+                        "beginsPattern": "cardad-spa@0.0.0 start",
+                        "endsPattern": "https:\/\/localhost:(\\d+)", // Capture the port
+                        
+                    }
+                }
+            ],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "close": true
+            },
+            
+        },
+        {
+            "label": "kill npm port",
+            "type": "shell",
+            "command": "npx kill-port ${env:PORT}",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "options": {
+              "env": {
+                "PORT": "${input:port}"
+              }
+            }
+        }
+    ]
+}
