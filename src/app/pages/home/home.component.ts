@@ -10,12 +10,13 @@ import { MatCardModule } from "@angular/material/card";
 import { CurrencyPipe } from "@angular/common";
 import { BehaviorSubject, Observable, map, tap, catchError, of } from "rxjs";
 import MockCardadAPI from "../../../mocks/API/MockAPI";
-import { CarIssueDetailsComponent } from "../car-issue-details/car-issue-details.component";
+import { CarIssueDetailsComponent } from "../../components/car-issue-details/car-issue-details.component";
+import { JobsPanelComponent } from "../../components/active-jobs-panel/active-jobs-panel.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, MatButtonModule, MatCardModule, CurrencyPipe, CarIssueDetailsComponent],
+  imports: [NgFor, NgIf, MatButtonModule, MatCardModule, CurrencyPipe, CarIssueDetailsComponent, JobsPanelComponent],
   providers: [MockCardadAPI],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -66,7 +67,6 @@ export class HomeComponent implements OnInit {
         } else {
           if (resp.data) {
             this.activeJobs?.push(resp.data);
-            this.showCarIssueDetails = false;
           }
         }
       });

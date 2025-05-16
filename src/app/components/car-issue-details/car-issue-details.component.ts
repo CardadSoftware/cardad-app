@@ -108,7 +108,7 @@ export class CarIssueDetailsComponent {
         issueDetails: this.issueForm.value
       } as IJob;
       this.jobCreated.emit(jobModel);
-      this.issueForm.reset();
+      this.closeComponent();
     }
   }
 

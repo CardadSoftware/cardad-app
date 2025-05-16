@@ -49,13 +49,15 @@ const testJobs: IJob[] = [
         _id: guidv4(),
         jobName: "Engine Repair",
         customer: testUser._id,
-        invoices: [] as IInvoice[]
+        invoices: [] as IInvoice[],
+        jobStatus: "In Progress",
     } as IJob,
     {
         _id: guidv4(),
         jobName: "Oil Change",
         customer: testUser,
-        invoices: [testInvoice] as IInvoice[]
+        invoices: [testInvoice] as IInvoice[],
+        jobStatus: "Diagnostics",
     } as IJob
 ];
 
@@ -98,7 +100,7 @@ class MockCardadAPI {
     // JobModel Operations
     getJobs(page: number, pageSize: number, filter?: string): Observable<ApiResponse<IJob[]>> {
         const response = new ApiResponse<IJob[]>();
-        response.data = testJobs;
+        response.data = [...testJobs];
         return this.delay(response);
     }
 

@@ -1,0 +1,12 @@
+<div>
+    <div *ngFor="let job of jobs">
+    <mat-list>
+        <mat-list-item>
+        <div mat-line>{{ job.jobName }}</div>
+        <div mat-line>{{ job.issueDetails ? job.issueDetails.issueDescription : '-' }}</div>
+        <div mat-line>Status: {{ job.jobStatus }}</div>
+        <button mat-button (click)="onActionClick(job)">Action</button>
+        </mat-list-item>
+    </mat-list>
+    </div>
+</div>
