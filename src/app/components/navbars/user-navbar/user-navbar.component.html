@@ -1,0 +1,18 @@
+<mat-toolbar class="user-toolbar" color="primary">
+    <a class="navbar-brand" routerLink="/">WebApp</a>
+
+    <span class="spacer"></span>
+
+    <button mat-button [matMenuTriggerFor]="profileMenu">
+    <mat-icon>account_circle</mat-icon> Profile
+    </button>
+    <ng-container class="right">
+    <button mat-button (click)="navTo('signin')">SignIn</button>
+        <mat-menu #profileMenu="matMenu">
+            <button mat-menu-item (click)="navTo(PageRoutes.MyGarage)">My Garage</button>
+            <button mat-menu-item (click)="navTo(PageRoutes.MyIssues)">My Issues</button>
+            <button mat-menu-item (click)="navTo(PageRoutes.Wallet)">Wallet</button>
+            <button mat-menu-item (click)="navTo(PageRoutes.Preferences)">Preferences</button>
+        </mat-menu>
+    </ng-container>
+</mat-toolbar>

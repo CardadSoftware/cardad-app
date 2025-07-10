@@ -12,7 +12,7 @@ import { on } from 'events';
   styleUrl: './active-jobs-panel.component.scss'
 })
 export class JobsPanelComponent {
-  @Input() jobs?: Array<IJob> = [];
+  @Input() jobs?: Array<IJob> = undefined;
   @Output() onAction = new EventEmitter<IJob>();
 
   onActionClick(job: IJob) {

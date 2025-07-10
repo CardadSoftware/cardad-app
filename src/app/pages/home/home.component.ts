@@ -1,5 +1,5 @@
 import { DataSource } from "@angular/cdk/collections";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit,IterableDiffers, DoCheck, IterableDiffer  } from "@angular/core";
 import { NgFor, NgIf } from "@angular/common";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
@@ -16,8 +16,8 @@ import { JobsPanelComponent } from "../../components/active-jobs-panel/active-jo
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, MatButtonModule, MatCardModule, CurrencyPipe, CarIssueDetailsComponent, JobsPanelComponent],
-  providers: [MockCardadAPI],
+  imports: [NgFor, NgIf, MatButtonModule, MatCardModule, CurrencyPipe, CarIssueDetailsComponent, JobsPanelComponent ],
+  providers: [MockCardadAPI, IterableDiffers],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -25,15 +25,18 @@ import { JobsPanelComponent } from "../../components/active-jobs-panel/active-jo
 export class HomeComponent implements OnInit {
 
   showCarIssueDetails: boolean = false;
-  carIssue: IJob | null = null;
   cars: Array<IVehicle> = [];
   selectedUser?: IUser | undefined;
   selectedCar?: IVehicle | undefined;
   activeJobs?: Array<IJob> = [];
+  jobDiffer: IterableDiffer<IJob>;
 
   issueDialogRef?: MatDialogRef<CarIssueDetailsComponent>
 
-  constructor(private cardadAPI: MockCardadAPI, private matDialog: MatDialog) {}
+  constructor(private cardadAPI: MockCardadAPI, private matDialog: MatDialog, private iterableDiffers: IterableDiffers) {
+    // Initialize the iterable differ for tracking changes in the active jobs array
+    this.jobDiffer = this.iterableDiffers.find(this.activeJobs).create();
+  }
 
   ngOnInit(): void {
     this.cardadAPI.getMe().subscribe(val => this.selectedUser = val.data);
