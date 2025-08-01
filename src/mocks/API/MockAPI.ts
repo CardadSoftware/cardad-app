@@ -5,16 +5,19 @@ import {
     IShop, 
     IInvoice,
     ITechnician, 
-    ICharge
+    ICharge,
+    ICarModel,
+    ICarMake
 } from 'cardad-db';
 
 import { v4 as guidv4 } from 'uuid';
 import { Observable, of, switchMap, timer } from 'rxjs';
 import { Injectable } from '@angular/core';
+import {Types as mongooseTypes} from 'mongoose';
 
 // Create test data using Mongoose models
 const testUser: IUser = {
-    _id: guidv4(),
+    _id: new mongooseTypes.ObjectId(),
     username: "anthony.stoute",
     firstName: "Anthony",
     lastName: "Stoute",
@@ -23,17 +26,6 @@ const testUser: IUser = {
     active: true,
     online: true
 } as IUser;
-
-const testVehicle: IVehicle = {
-    _id: guidv4(),
-    name: "Toyota Corolla",
-    model: "Corolla",
-    make: "Toyota",
-    year: "2020",
-    vin: "1HGCM82633A123456",
-    licNumber: "ABC123",
-    mileage: 50000
-} as IVehicle;
 
 const testInvoice: IInvoice = {
     invoiceName: "Anthonys Invoice",
@@ -46,14 +38,14 @@ const testInvoice: IInvoice = {
 
 const testJobs: IJob[] = [
     {
-        _id: guidv4(),
+        _id: new mongooseTypes.ObjectId(),
         jobName: "Engine Repair",
-        customer: testUser._id,
+        customer: testUser,
         invoices: [] as IInvoice[],
         jobStatus: "In Progress",
     } as IJob,
     {
-        _id: guidv4(),
+        _id: new mongooseTypes.ObjectId(),
         jobName: "Oil Change",
         customer: testUser,
         invoices: [testInvoice] as IInvoice[],
@@ -63,7 +55,7 @@ const testJobs: IJob[] = [
 
 const testShops: IShop[] = [
     {
-        _id: guidv4(),
+        _id: new mongooseTypes.ObjectId(),
         name: "AutoFix",
         address: {
             streetAddress: "123 Main St",
@@ -77,7 +69,7 @@ const testShops: IShop[] = [
 
 const testTechnicians: ITechnician[] = [
     {
-        _id: guidv4(),
+        _id: new mongooseTypes.ObjectId(),
         username: "tech1",
         firstName: "Jane",
         lastName: "Doe",
@@ -87,6 +79,130 @@ const testTechnicians: ITechnician[] = [
         certifications: ["ASE"],
         company: "AutoFix"
     } as ITechnician
+];
+
+const testCarMakes: ICarMake[] = [
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: "Toyota",
+    country: "Japan",
+    establishedYear: 1937,
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: "Ford",
+    country: "United States",
+    establishedYear: 1903,
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: "BMW",
+    country: "Germany",
+    establishedYear: 1916,
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: "Hyundai",
+    country: "South Korea",
+    establishedYear: 1967,
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: "Ferrari",
+    country: "Italy",
+    establishedYear: 1939,
+  },
+];
+
+const testCarModels: ICarModel[] = [
+    { _id: new mongooseTypes.ObjectId(), name: 'Camry', make: testCarMakes.find(f => f.name == "Toyota"), year: 2020 } as ICarModel,
+    { _id: new mongooseTypes.ObjectId(), name: 'F-150', make: testCarMakes.find(f => f.name == "Ford"), year: 2024 } as ICarModel,
+    { _id: new mongooseTypes.ObjectId(), name: 'Corolla', make: testCarMakes.find(f => f.name == "Toyota"), year: 2019 } as ICarModel,
+    { _id: new mongooseTypes.ObjectId(), name: 'Model 3', make: testCarMakes.find(f => f.name == "Tesla"), year: 20223 } as ICarModel
+  ];
+
+
+const testVehicles: IVehicle[] = [
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: 'Ford F-150',
+    model: test,
+    make: 'Ford',
+    year: '2021',
+    vin: '1FTEW1EP1MFA00001',
+    licNumber: 'ABC1234',
+    mileage: 45230,
+    bodyStyle: 'Truck',
+    engineType: 'V6',
+    transmission: 'Automatic',
+    fuelType: 'Gasoline',
+    features: ['Backup Camera', 'Bluetooth', 'Cruise Control'],
+    price: 38995.00
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: 'Toyota Corolla',
+    model: 'LE',
+    make: 'Toyota',
+    year: '2019',
+    vin: '2T1BURHE5KC123456',
+    licNumber: 'XYZ5678',
+    mileage: 32100,
+    bodyStyle: 'Sedan',
+    engineType: 'I4',
+    transmission: 'CVT',
+    fuelType: 'Gasoline',
+    features: ['Heated Seats', 'Keyless Entry'],
+    price: 17995.00
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: 'Tesla Model 3',
+    model: 'Long Range',
+    make: 'Tesla',
+    year: '2022',
+    vin: '5YJ3E1EB5MF123456',
+    licNumber: 'EV2022',
+    mileage: 9800,
+    bodyStyle: 'Sedan',
+    engineType: 'Electric',
+    transmission: 'Automatic',
+    fuelType: 'Electric',
+    features: ['Autopilot', 'Navigation System', 'Bluetooth'],
+    price: 52999.00
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: 'Honda Civic',
+    model: 'EX',
+    make: 'Honda',
+    year: '2018',
+    vin: '19XFC2F79JE000001',
+    licNumber: 'CIVIC18',
+    mileage: 64000,
+    bodyStyle: 'Coupe',
+    engineType: 'I4',
+    transmission: 'Manual',
+    fuelType: 'Gasoline',
+    features: ['Sunroof', 'Backup Camera'],
+    price: 15495.00
+  },
+  {
+    _id: new mongooseTypes.ObjectId(),
+    name: 'Chevrolet Tahoe',
+    model: 'LT',
+    make: 'Chevrolet',
+    year: '2020',
+    vin: '1GNSKBKC3LR123456',
+    licNumber: 'SUV2020',
+    mileage: 27850,
+    bodyStyle: 'SUV',
+    engineType: 'V8',
+    transmission: 'Automatic',
+    fuelType: 'Gasoline',
+    features: ['3rd Row Seating', 'Heated Seats', 'Bluetooth'],
+    price: 48950.00
+  }
 ];
 @Injectable({
     providedIn: 'root' // Makes this service a singleton throughout the app
